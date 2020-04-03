@@ -1,0 +1,9 @@
+*.class
+
+bin
+out
+build
+.build
+.gradle
+.idea
+!.gitignore
