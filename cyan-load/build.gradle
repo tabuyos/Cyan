@@ -12,5 +12,12 @@ repositories {
 }
 
 dependencies {
+    implementation(
+            "org.ow2.asm:asm:8.0",
+            "org.ow2.asm:asm-commons:8.0",
+            "org.ow2.asm:asm-tree:8.0",
+            "org.ow2.asm:asm-util:8.0",
+            "com.alibaba:fastjson:1.2.68"
+    )
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
