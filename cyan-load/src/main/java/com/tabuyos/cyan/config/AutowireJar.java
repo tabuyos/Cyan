@@ -1,6 +1,8 @@
 package com.tabuyos.cyan.config;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -11,34 +13,30 @@ import java.util.Map;
  * @Description
  */
 public class AutowireJar {
-    private static final Map<String, Object> map = new HashMap<>();
-    private static final Map<String, Object> jarInfoMap = new HashMap<>();
-    private static final Map<String, Object> jarMap = new HashMap<>();
-    private static final Map<String, Object> classInfoMap = new HashMap<>();
-    private static final Map<String, Object> classMap = new HashMap<>();
-    private static final Map<String, Object> loadedMap = new HashMap<>();
 
-    public static Map<String, Object> getMap() {
-        return map;
-    }
+    private static Map<String, String> jarInfoMap = new HashMap<>();
+    private static Map<String, Map<String, List<Map<String, String>>>> jarMap = new HashMap<>();
+    private static Map<String, String> classInfoMap = new HashMap<>();
+    private static Map<String, List<Map<String, String>>> classMap = new HashMap<>();
+    private static Map<String, String> loadedMap = new HashMap<>();
 
-    public static Map<String, Object> getJarInfoMap() {
+    public static Map<String, String> getJarInfoMap() {
         return jarInfoMap;
     }
 
-    public static Map<String, Object> getJarMap() {
+    public static Map<String, Map<String, List<Map<String, String>>>> getJarMap() {
         return jarMap;
     }
 
-    public static Map<String, Object> getClassInfoMap() {
+    public static Map<String, String> getClassInfoMap() {
         return classInfoMap;
     }
 
-    public static Map<String, Object> getClassMap() {
+    public static Map<String, List<Map<String, String>>> getClassMap() {
         return classMap;
     }
 
-    public static Map<String, Object> getLoadedMap() {
+    public static Map<String, String> getLoadedMap() {
         return loadedMap;
     }
 }

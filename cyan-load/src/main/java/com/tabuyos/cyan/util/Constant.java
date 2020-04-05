@@ -11,4 +11,9 @@ public class Constant {
     public static final String SUFFIX_JAR = ".jar";
     public static final String SUFFIX_JAVA = ".java";
     public static final String SUFFIX_CLASS = ".class";
+    public static final String SPACE = " ";
+    public static final String ARG_FLAG = "arg";
+    public static final String LEFT_PARENTHESIS = "(";
+    public static final String RIGHT_PARENTHESIS = ")";
+    public static final String COMMA = ",";
 }
