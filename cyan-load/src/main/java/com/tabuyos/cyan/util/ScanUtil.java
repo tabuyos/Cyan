@@ -26,7 +26,7 @@ import java.util.jar.JarFile;
  */
 public class ScanUtil {
     private List<String> paths = new ArrayList<>();
-    private List<String> names = new ArrayList<>();
+    private Map<String, List<String>> names = new HashMap<>();
 
 
     public ScanUtil() {
@@ -42,6 +42,7 @@ public class ScanUtil {
         }
         for (String path : paths) {
             try {
+                List<String> classNameList = new ArrayList<>();
                 String jarName = FileUtil.getFileName(path, Constant.SUFFIX_JAR);
                 if (AutowireJar.getJarInfoMap().containsKey(jarName)) {
                     continue;
@@ -52,13 +53,14 @@ public class ScanUtil {
                 while (enumeration.hasMoreElements()) {
                     JarEntry jarEntry = enumeration.nextElement();
                     String name = jarEntry.getName();
-                    if (name.endsWith(".class")) {
-                        names.add(name);
+                    if (name.endsWith(Constant.SUFFIX_CLASS)) {
+                        classNameList.add(name);
                         String className = FileUtil.getFileName(name, Constant.SUFFIX_CLASS);
                         String classPath = FileUtil.getClassPackage(name);
                         AutowireJar.getClassInfoMap().put(className, classPath);
                     }
                 }
+                names.put(path, classNameList);
                 jarFile.close();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -67,20 +69,26 @@ public class ScanUtil {
     }
 
     // use asm parse class
+
+    /**
+     * arg0: pathName, arg1-n: classList
+     * @param classPaths pathName and classList
+     */
     public void parseClass(String... classPaths) {
         if (classPaths.length > 0) {
-            names.addAll(Arrays.asList(classPaths));
+            List<String> classNameList = new ArrayList<>(Arrays.asList(classPaths).subList(1, classPaths.length));
+            names.put(FileUtil.getFileName(classPaths[0], Constant.SUFFIX_CLASS), classNameList);
         }
         for (String path : paths) {
             try {
-                File file = new File(path);//jar包的路径
+                File file = new File(path);
                 String jarName = FileUtil.getFileName(path, Constant.SUFFIX_JAR);
                 if (AutowireJar.getJarMap().containsKey(jarName)) {
                     continue;
                 }
                 URL url = file.toURI().toURL();
-                ClassLoader loader = new URLClassLoader(new URL[]{url});//创建类加载器
-                for (String name : names) {
+                ClassLoader loader = new URLClassLoader(new URL[]{url});
+                for (String name : names.get(path)) {
                     InputStream inputStream = null;
                     try {
                         inputStream = Objects.requireNonNull(loader.getResourceAsStream(name));
@@ -141,7 +149,7 @@ public class ScanUtil {
                     }
                     list.add(fieldMap);
                     list.add(methodMap);
-                    AutowireJar.getClassMap().put(className, list);
+                    AutowireJar.getClassMap().put(className + Constant.DELIMITER + classPackage, list);
                 }
                 AutowireJar.getJarMap().put(jarName, AutowireJar.getClassMap());
             } catch (Exception e) {
