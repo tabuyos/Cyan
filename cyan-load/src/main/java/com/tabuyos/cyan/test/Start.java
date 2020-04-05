@@ -15,29 +15,53 @@ import java.util.*;
 public class Start {
     public static void main(String[] args) {
         List<String> pathList = new ArrayList<>(Arrays.asList(args));
+
+        Map<String, String> loadedMap = AutowireJar.getLoadedMap();
+        Map<String, List<Map<String, String>>> classMap = AutowireJar.getClassMap();
+        Map<String, String> classInfoMap = AutowireJar.getClassInfoMap();
+        Map<String, String> jarInfoMap = AutowireJar.getJarInfoMap();
+
 //        pathList.add("F:/Temp/asm/fastjson-1.2.68.jar");
+
         ScanUtil scanUtil = new ScanUtil(pathList);
         scanUtil.parseJar();
         scanUtil.parseClass();
 
         Scanner scanner = new Scanner(System.in);
-        System.out.println("input object or class: ");
-        String key = scanner.nextLine();
-        Map<String, String> loadedMap = AutowireJar.getLoadedMap();
-        Map<String, List<Map<String, String>>> classMap = AutowireJar.getClassMap();
-        Map<String, String> classInfoMap = AutowireJar.getClassInfoMap();
+        System.out.println("Show jar information, type 0");
+        System.out.println("Show class information, type 1");
+        System.out.println("Input object or class, type 2");
+        System.out.print("Type 0/1/2? ");
+        String flag = scanner.nextLine();
+        while (!flag.equals("2")) {
+            switch (flag) {
+                case "0":
+                    showJarInfo(jarInfoMap);
+                    break;
+                case "1":
+                    showClassInfo(classInfoMap);
+                    break;
+                default:
+                    System.out.println("Type error. Try again.");
+                    break;
+            }
+            System.out.print("Type 0/1/2? ");
+            flag = scanner.nextLine();
+        }
+        System.out.print("Input object or class name: ");
+        String objectOrClassName = scanner.nextLine();
 
-        while (!key.equals("exit")) {
+        while (!objectOrClassName.equals("exit")) {
             try {
                 // add object or class to loadedMap
-                if (loadedMap.containsKey(key)) {
-                    getFieldOrMethod(scanner, loadedMap, classMap, key);
-                } else if (classInfoMap.containsKey(key)) {
+                if (loadedMap.containsKey(objectOrClassName)) {
+                    getFieldOrMethod(scanner, loadedMap, classMap, objectOrClassName);
+                } else if (classInfoMap.containsKey(objectOrClassName)) {
                     // simulate import
-                    System.out.println(classInfoMap.get(key));
-                    System.out.println("input name: ");
+                    System.out.println(classInfoMap.get(objectOrClassName));
+                    System.out.print("Input object name: ");
                     String name = scanner.nextLine();
-                    loadedMap.put(name, key);
+                    loadedMap.put(name, objectOrClassName);
                     getFieldOrMethod(scanner, loadedMap, classMap, name);
                 } else {
                     System.out.println("Not Found the object or class, try again please.");
@@ -45,15 +69,15 @@ public class Start {
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
-                System.out.println("input object or class: ");
-                key = scanner.nextLine();
+                System.out.print("Input object or class name: ");
+                objectOrClassName = scanner.nextLine();
             }
         }
     }
 
     private static void getFieldOrMethod(Scanner scanner, Map<String, String> loadedMap, Map<String, List<Map<String, String>>> classMap, String name) {
         String className = loadedMap.get(name);
-        System.out.println(name + ".");
+        System.out.print(name + ".");
         String fieldOrMethodName = scanner.nextLine();
         for (Map<String, String> map : classMap.get(className)) {
             for (String keyString : map.keySet()) {
@@ -74,6 +98,18 @@ public class Start {
             if (substring.contains("public")) {
                 System.out.println("\t" + substring);
             }
+        }
+    }
+
+    private static void showJarInfo(Map<String, String> jarInfoMap) {
+        for (String key : jarInfoMap.keySet()) {
+            System.out.println(key + "\n\t" + jarInfoMap.get(key));
+        }
+    }
+
+    private static void showClassInfo(Map<String, String> classInfoMap) {
+        for (String key : classInfoMap.keySet()) {
+            System.out.println(key + "\n\t" + classInfoMap.get(key));
         }
     }
 }
