@@ -44,6 +44,9 @@ public class ScanUtil {
             try {
                 List<String> classNameList = new ArrayList<>();
                 String jarName = FileUtil.getFileName(path, Constant.SUFFIX_JAR);
+                if ("".equals(jarName)) {
+                    continue;
+                }
                 if (AutowireJar.getJarInfoMap().containsKey(jarName)) {
                     continue;
                 }

@@ -20,6 +20,9 @@ public class FileUtil {
 
     public static String getFileName(String path, String suffix) {
         path = FileUtil.normalize(path);
+        if (path.lastIndexOf(suffix) == -1) {
+            return "";
+        }
         return path.substring(path.lastIndexOf(File.separator) + 1, path.lastIndexOf(suffix));
     }
 
