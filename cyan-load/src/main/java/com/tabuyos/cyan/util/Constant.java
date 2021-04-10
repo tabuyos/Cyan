@@ -16,4 +16,5 @@ public class Constant {
     public static final String LEFT_PARENTHESIS = "(";
     public static final String RIGHT_PARENTHESIS = ")";
     public static final String COMMA = ",";
+    public static final String DELIMITER = "===";
 }

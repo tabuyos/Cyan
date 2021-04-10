@@ -1,5 +1,7 @@
 package com.tabuyos.cyan.config;
 
+import com.tabuyos.cyan.util.RepeatHashMap;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +17,7 @@ public class AutowireJar {
 
     private static Map<String, String> jarInfoMap = new HashMap<>();
     private static Map<String, Map<String, List<Map<String, String>>>> jarMap = new HashMap<>();
-    private static Map<String, String> classInfoMap = new HashMap<>();
+    private static Map<String, String> classInfoMap = new RepeatHashMap();
     private static Map<String, List<Map<String, String>>> classMap = new HashMap<>();
     private static Map<String, String> loadedMap = new HashMap<>();
 
